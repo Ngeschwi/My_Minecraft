@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 6156728638481654153}
   - component: {fileID: 3883037040524778900}
   - component: {fileID: 2829917815487987210}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Chunk
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -120,4 +120,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a27df3b0b47e9bcd58973387a56e61d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  showGizmos: 0
+  showGizmo: 0
