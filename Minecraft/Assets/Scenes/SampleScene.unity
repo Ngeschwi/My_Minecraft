@@ -133,6 +133,7 @@ GameObject:
   m_Component:
   - component: {fileID: 48021765}
   - component: {fileID: 48021766}
+  - component: {fileID: 48021767}
   m_Layer: 0
   m_Name: BiomeGenerator
   m_TagString: Untagged
@@ -157,6 +158,7 @@ Transform:
   - {fileID: 711025957}
   - {fileID: 1725385069}
   - {fileID: 2035249089}
+  - {fileID: 1250569699}
   m_Father: {fileID: 1856882561}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &48021766
@@ -171,9 +173,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df3c5f77c13eeb93894b026045f6b614, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  waterThreshold: 8
   biomeNoiseSettings: {fileID: 11400000, guid: 57429a6c877671905b5e6302cdc17d22, type: 2}
+  domainWarping: {fileID: 48021767}
+  useDoaminWarping: 1
   startLayerHandler: {fileID: 1675416659}
+  additionalLayers:
+  - {fileID: 1360984697}
+--- !u!114 &48021767
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 48021764}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1a7ba074309409215b7136624e9caf0d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  noiseDomainX: {fileID: 11400000, guid: ce83b6d95b61fe6498f3e42f3be7a744, type: 2}
+  noiseDomainY: {fileID: 11400000, guid: b7e07d1994da1574d873b8f72b7290af, type: 2}
+  amplitudeX: 80
+  amplitudeY: 80
 --- !u!1 &330585543
 GameObject:
   m_ObjectHideFlags: 0
@@ -686,6 +707,86 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1112876181}
   m_CullTransparentMesh: 1
+--- !u!1 &1250569698
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1250569699}
+  m_Layer: 0
+  m_Name: AdditionalLayers
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1250569699
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1250569698}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1360984696}
+  m_Father: {fileID: 48021765}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1360984695
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1360984696}
+  - component: {fileID: 1360984697}
+  m_Layer: 0
+  m_Name: StoneLayer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1360984696
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1360984695}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1250569699}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1360984697
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1360984695}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba1b5b387694a5ea6b1f50758fe2eadc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Next: {fileID: 0}
+  stoneThreshold: 0.5
+  domainWarping: {fileID: 48021767}
+  stoneNoiseSettings: {fileID: 11400000, guid: 7dce4fb7b83f48933b61a34f1e8a840c, type: 2}
 --- !u!1 &1583853781
 GameObject:
   m_ObjectHideFlags: 0
