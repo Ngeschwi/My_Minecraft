@@ -8,56 +8,95 @@ public class World : MonoBehaviour
 {
     public int mapSizeInChunks = 6;
     public int chunkSize = 16, chunkHeight = 100;
+    public int chunkDrawingRange = 8;
+    
     public GameObject chunkPrefab;
     
     public TerrainGenerator terrainGenerator;
     public Vector2Int mapSeedOffset;
 
-    public Dictionary<Vector3Int, ChunkData> chunkDataDictionary = new Dictionary<Vector3Int, ChunkData>();
-    public Dictionary<Vector3Int, ChunkRenderer> chunkDictionary = new Dictionary<Vector3Int, ChunkRenderer>();
+    //public Dictionary<Vector3Int, ChunkData> chunkDataDictionary = new Dictionary<Vector3Int, ChunkData>();
+    //public Dictionary<Vector3Int, ChunkRenderer> chunkDictionary = new Dictionary<Vector3Int, ChunkRenderer>();
 
     public UnityEvent OnWorldCreated;
     public UnityEvent OnNewChunksGenerated;
-    
+
+    public WorldData worldData { get; private set; }
+
+    private void Awake()
+    {
+        worldData = new WorldData
+        {
+            chunkHeight = this.chunkHeight,
+            chunkSize = this.chunkSize,
+            chunkDataDictionary = new Dictionary<Vector3Int, ChunkData>(),
+            chunkDictionary = new Dictionary<Vector3Int, ChunkRenderer>()
+        };
+    }
+
     public void GenerateWorld()
     {
-        chunkDataDictionary.Clear();
-        foreach (ChunkRenderer chunk in chunkDictionary.Values)
-        {
-            Destroy(chunk.gameObject);
-        }
-        chunkDictionary.Clear();
+        GenerateWorld(Vector3Int.zero);
+    }
+    
+    private void GenerateWorld(Vector3Int position)
+    {
+        WorldGenerationData worldGenerationData = GetPositionThatPlayerSees(position);
 
-        for (int x = 0; x < mapSizeInChunks; x++)
+        foreach (Vector3Int pos in worldGenerationData.chunkPositionsToRemove)
         {
-            for (int z = 0; z < mapSizeInChunks; z++)
-            {
-                ChunkData data = new ChunkData(chunkSize, chunkHeight, this, new Vector3Int(x * chunkSize, 0, z * chunkSize));
-                //GenerateVoxels(data);
-                ChunkData newData = terrainGenerator.GenerateChunkData(data, mapSeedOffset);
-                chunkDataDictionary.Add(newData.worldPosition, newData);
-            }
+            WorldDataHelper.RemoveChunk(this, pos);
         }
 
-        foreach (ChunkData data in chunkDataDictionary.Values)
+        foreach (Vector3Int pos in worldGenerationData.chunkDataToRemove)
         {
+            WorldDataHelper.RemoveChunkData(this, pos);
+        }
+        
+        foreach (var pos in worldGenerationData.chunkDataPositionsToCreate)
+        {
+            ChunkData data = new ChunkData(chunkSize, chunkHeight, this, pos);
+            ChunkData newData = terrainGenerator.GenerateChunkData(data, mapSeedOffset);
+            worldData.chunkDataDictionary.Add(pos, newData);
+        }
+
+        foreach (var pos in worldGenerationData.chunkPositionsToCreate)
+        {
+            ChunkData data = worldData.chunkDataDictionary[pos];
             MeshData meshData = Chunk.GetChunkMeshData(data);
             
-            GameObject chunkObject = Instantiate(chunkPrefab, data.worldPosition, Quaternion.identity);
+            GameObject chunkObject = Instantiate(chunkPrefab, pos, Quaternion.identity);
             chunkObject.transform.parent = transform;
            
             ChunkRenderer chunkRenderer = chunkObject.GetComponent<ChunkRenderer>();
             chunkRenderer.InitializeChunk(data);
             chunkRenderer.UpdateChunk(meshData);
 
-            chunkDictionary.Add(data.worldPosition, chunkRenderer);
+            worldData.chunkDictionary.Add(pos, chunkRenderer);
         }
+        
         OnWorldCreated?.Invoke();
     }
 
-    private void GenerateVoxels(ChunkData data)
+    private WorldGenerationData GetPositionThatPlayerSees(Vector3Int playerPosition)
     {
+        List<Vector3Int> allChunkPositionsNeeded = WorldDataHelper.GetChunkPositionsAroundPlayer(this, playerPosition);
+        List<Vector3Int> allChunkDataPositionsNeeded = WorldDataHelper.GetDataPositionsAroundPlayer(this, playerPosition);
+
+        List<Vector3Int> chunkPositionsToCreate = WorldDataHelper.SelectPositionsToCreate(worldData, allChunkPositionsNeeded, playerPosition);
+        List<Vector3Int> chunkDataPositionsToCreate = WorldDataHelper.SelectDataPositonsToCreate(worldData, allChunkDataPositionsNeeded, playerPosition);
+
+        List<Vector3Int> chunkPositionsToRemove = WorldDataHelper.GetUnneededChunks(worldData, allChunkPositionsNeeded);
+        List<Vector3Int> chunkDataToRemove = WorldDataHelper.GetUnneededData(worldData, allChunkDataPositionsNeeded);
         
+        WorldGenerationData data = new WorldGenerationData
+        {
+            chunkPositionsToCreate = chunkPositionsToCreate,
+            chunkDataPositionsToCreate = chunkDataPositionsToCreate,
+            chunkPositionsToRemove = chunkPositionsToRemove,
+            chunkDataToRemove = chunkDataToRemove
+        };
+        return data;
     }
 
     public BlockType GetBlockFromChunkCoordinates(ChunkData chunkData, int x, int y, int z)
@@ -65,7 +104,7 @@ public class World : MonoBehaviour
         Vector3Int pos = Chunk.ChunkPositionFromBlockCoords(this, x, y, z);
         ChunkData containerChunk = null;
 
-        chunkDataDictionary.TryGetValue(pos, out containerChunk);
+        worldData.chunkDataDictionary.TryGetValue(pos, out containerChunk);
 
         if (containerChunk == null)
             return BlockType.Nothing;
@@ -76,7 +115,28 @@ public class World : MonoBehaviour
 
     public void LoadAdditionalChunksRequest(GameObject player)
     {
-        Debug.Log("Loading additional chunks");
+        GenerateWorld(Vector3Int.RoundToInt(player.transform.position));
         OnNewChunksGenerated?.Invoke();
+    }
+    
+    public struct WorldGenerationData
+    {
+        public List<Vector3Int> chunkPositionsToCreate;
+        public List<Vector3Int> chunkDataPositionsToCreate;
+        public List<Vector3Int> chunkPositionsToRemove;
+        public List<Vector3Int> chunkDataToRemove;
+    }
+    
+    public struct WorldData 
+    {
+        public Dictionary<Vector3Int, ChunkData> chunkDataDictionary;
+        public Dictionary<Vector3Int, ChunkRenderer> chunkDictionary;
+        public int chunkSize;
+        public int chunkHeight;
+    }
+
+    public void RemoveChunk(ChunkRenderer chunk)
+    {
+        chunk.gameObject.SetActive(false);
     }
 }

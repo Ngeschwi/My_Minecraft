@@ -848,6 +848,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1112876183}
+        m_TargetAssemblyTypeName: UnityEngine.UI.Selectable, UnityEngine.UI
+        m_MethodName: set_interactable
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1112876184
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1048,6 +1060,7 @@ MonoBehaviour:
   mapSizeInChunks: 20
   chunkSize: 16
   chunkHeight: 100
+  chunkDrawingRange: 8
   chunkPrefab: {fileID: 8106382478514963449, guid: 5804c9ae37a8f7b5f8db651ed5aa9ed7,
     type: 3}
   terrainGenerator: {fileID: 1856882562}

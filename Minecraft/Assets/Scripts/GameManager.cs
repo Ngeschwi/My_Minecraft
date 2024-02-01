@@ -20,7 +20,7 @@ public class GameManager : MonoBehaviour
         if (player != null)
             return;
 
-        Vector3Int raycastOrigin = new Vector3Int(world.chunkSize * world.mapSizeInChunks / 2, world.chunkHeight + 1, world.chunkSize * world.mapSizeInChunks / 2);
+        Vector3Int raycastOrigin = new Vector3Int(world.chunkSize / 2, 100, world.chunkSize / 2);
         RaycastHit hit;
 
         if (Physics.Raycast(raycastOrigin, Vector3.down, out hit, 120))
