@@ -886,6 +886,56 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1112876181}
   m_CullTransparentMesh: 1
+--- !u!1 &1230920540
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1230920542}
+  - component: {fileID: 1230920541}
+  m_Layer: 0
+  m_Name: GameManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1230920541
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1230920540}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e055021befc3dd3b874035a711d26dc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerPrefab: {fileID: 116692708104115924, guid: d43e9bef6cf8dc74dbbc13269406cc57,
+    type: 3}
+  currentPlayerChunkPosition: {x: 0, y: 0, z: 0}
+  world: {fileID: 1583853782}
+  detectiontime: 1
+  camera_vm: {fileID: 364123331}
+--- !u!4 &1230920542
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1230920540}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 124.81664, y: -90.72243, z: 68.95056}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1250569698
 GameObject:
   m_ObjectHideFlags: 0
@@ -1002,6 +1052,36 @@ MonoBehaviour:
     type: 3}
   terrainGenerator: {fileID: 1856882562}
   mapSeedOffset: {x: 0, y: 0}
+  OnWorldCreated:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1230920541}
+        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+        m_MethodName: SpawnPlayer
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnNewChunksGenerated:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1230920541}
+        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+        m_MethodName: StartCheckingTheMap
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!4 &1583853783
 Transform:
   m_ObjectHideFlags: 0
@@ -1428,3 +1508,4 @@ SceneRoots:
   - {fileID: 1583853783}
   - {fileID: 1856882561}
   - {fileID: 364123332}
+  - {fileID: 1230920542}
