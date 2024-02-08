@@ -27,17 +27,17 @@ public static class WorldDataHelper
             {
                 Vector3Int chunkPos = ChunkPositionFromBlockCoords(world, new Vector3Int(x, 0, z));
                 chunkPositionsToCreate.Add(chunkPos);
-                // if (x >= playerPosition.x - world.chunkSize
-                //     && x <= playerPosition.x + world.chunkSize
-                //     && z >= playerPosition.z - world.chunkSize
-                //     && z <= playerPosition.z + world.chunkSize)
-                // {
-                //     for (int y = -world.chunkHeight; y >= playerPosition.y - world.chunkHeight * 2; y -= world.chunkHeight)
-                //     {
-                //         chunkPos = ChunkPositionFromBlockCoords(world, new Vector3Int(x, y, z));
-                //         chunkPositionsToCreate.Add(chunkPos);
-                //     }
-                // }
+                if (x >= playerPosition.x - world.chunkSize
+                    && x <= playerPosition.x + world.chunkSize
+                    && z >= playerPosition.z - world.chunkSize
+                    && z <= playerPosition.z + world.chunkSize)
+                {
+                    for (int y = -world.chunkHeight; y >= playerPosition.y - world.chunkHeight * 2; y -= world.chunkHeight)
+                    {
+                        chunkPos = ChunkPositionFromBlockCoords(world, new Vector3Int(x, y, z));
+                        chunkPositionsToCreate.Add(chunkPos);
+                    }
+                }
             }
         }
 
@@ -58,17 +58,17 @@ public static class WorldDataHelper
             {
                 Vector3Int chunkPos = ChunkPositionFromBlockCoords(world, new Vector3Int(x, 0, z));
                 chunkDataPositionsToCreate.Add(chunkPos);
-                // if (x >= playerPosition.x - world.chunkSize
-                //     && x <= playerPosition.x + world.chunkSize
-                //     && z >= playerPosition.z - world.chunkSize
-                //     && z <= playerPosition.z + world.chunkSize)
-                // {
-                //     for (int y = -world.chunkHeight; y >= playerPosition.y - world.chunkHeight * 2; y -= world.chunkHeight)
-                //     {
-                //         chunkPos = ChunkPositionFromBlockCoords(world, new Vector3Int(x, y, z));
-                //         chunkDataPositionsToCreate.Add(chunkPos);
-                //     }
-                // }
+                if (x >= playerPosition.x - world.chunkSize
+                    && x <= playerPosition.x + world.chunkSize
+                    && z >= playerPosition.z - world.chunkSize
+                    && z <= playerPosition.z + world.chunkSize)
+                {
+                    for (int y = -world.chunkHeight; y >= playerPosition.y - world.chunkHeight * 2; y -= world.chunkHeight)
+                    {
+                        chunkPos = ChunkPositionFromBlockCoords(world, new Vector3Int(x, y, z));
+                        chunkDataPositionsToCreate.Add(chunkPos);
+                    }
+                }
             }
         }
 
@@ -127,5 +127,34 @@ public static class WorldDataHelper
     public static void RemoveChunkData(World world, Vector3Int pos)
     {
         world.worldData.chunkDataDictionary.Remove(pos);
+    }
+
+    public static void SetBlock(World worldReference, Vector3Int pos, BlockType blockType)
+    {
+        ChunkData chunkData = GetChunkData(worldReference, pos);
+
+        if (chunkData != null)
+        {
+            Vector3Int localPosition = Chunk.GetBlockInChunkCoordinates(chunkData, pos);
+            Chunk.SetBlock(chunkData, localPosition, blockType);
+        }
+    }
+
+    public static ChunkData GetChunkData(World worldReference, Vector3Int pos)
+    {
+        Vector3Int chunkPos = ChunkPositionFromBlockCoords(worldReference, pos);
+        ChunkData containerChunk = null;
+        
+        worldReference.worldData.chunkDataDictionary.TryGetValue(chunkPos, out containerChunk);
+        
+        return containerChunk;
+    }
+
+    public static ChunkRenderer GetChunk(World worldReference, Vector3Int worldPosition)
+    {
+        if (worldReference.worldData.chunkDictionary.ContainsKey(worldPosition))
+            return worldReference.worldData.chunkDictionary[worldPosition];
+
+        return null;
     }
 }
